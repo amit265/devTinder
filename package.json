@@ -1,0 +1,21 @@
+{
+  "name": "devtinderbackend",
+  "version": "1.0.0",
+  "description": "backend for tinderdev",
+  "main": "index.js",
+  "scripts": {
+    "dev" : "nodemon src/app.js",
+    "start": "node src/app.js"
+
+  },
+  "keywords": [
+    "nodejs",
+    "javascript",
+    "backend"
+  ],
+  "author": "Amit Kumar",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
