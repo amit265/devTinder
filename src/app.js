@@ -2,9 +2,18 @@ const express = require("express");
 
 const app = express();
 
-app.get("/hello", (req, res) => {
+app.get("/hello", (req, res, next) => {
+    console.log("1st response")
+        next();
+
   res.send("Hello helo hello hello get");
-});
+},
+(req, res) => {
+    console.log("2nd response")
+
+    res.send("everything get");
+    
+  });
 
 app.post("/hello", (req, res) => {
   res.send("hello its amit post");
