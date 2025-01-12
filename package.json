@@ -13,7 +13,7 @@
     "javascript",
     "backend"
   ],
-  "author": "Amit Kumar",
+  "author": "Amit",
   "license": "ISC",
   "dependencies": {
     "express": "^4.21.2"
