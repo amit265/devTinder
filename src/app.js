@@ -1,47 +1,48 @@
 const express = require("express");
 const connectDB = require("./config/database");
-const User = require("./models/user");
-const app = express(); 
+const app = express();
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const http = require("http");
 
+require("dotenv").config();
+
+require("./utils/cronjob");
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(express.json());
+app.use(cookieParser());
 
+const authRouter = require("./routes/auth");
+const profileRouter = require("./routes/profile");
+const requestRouter = require("./routes/request");
+const userRouter = require("./routes/user");
+const paymentRouter = require("./routes/payment");
+const initializeSocket = require("./utils/socket");
+const chatRouter = require("./routes/chat");
 
-app.get("/users", async (req, res) => {
-    try {
-        const users = await User.find();
-        res.json(users);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-});
+app.use("/", authRouter);
+app.use("/", profileRouter);
+app.use("/", requestRouter);
+app.use("/", userRouter);
+app.use("/", paymentRouter);
+app.use("/", chatRouter);
 
+const server = http.createServer(app);
+initializeSocket(server);
 
-app.post("/signup", async (req, res) => {
-
-    const user = new User({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-        age: req.body.age,
-        gender: req.body.gender
-    })
-
-    await user.save().then(data => res.json(data))
-    .catch(err => res.status(400).json(err));
-    
-})
-
-
-
-
-connectDB().then(() => {
-    console.log("Database connected successfully")
-    app.listen(5000, () => console.log("server listening on 5000"));
-
-})
-.catch((err) => {
-    console.error("Database cannot be connected", err)
-})
-
-
-
+connectDB()
+  .then(() => {
+    console.log("Database connection established...");
+    server.listen(7777, () => {
+      console.log("Server is successfully listening on port 7777...");
+    });
+  })
+  .catch((err) => {
+    console.error("Database cannot be connected!!" + err);
+  });
